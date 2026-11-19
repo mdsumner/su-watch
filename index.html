@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SU watch: Nectar budgets and burn</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --accent: #2a78d6;      --accent-track: #cde2fb;
+  --warning: #fab219;     --warning-track: #fdecc4;
+  --critical: #d03b3b;    --critical-track: #f5d2d2;
+  --good: #0ca30c;
+  --pace: #52514e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --accent: #3987e5;    --accent-track: #104281;
+    --warning: #fab219;   --warning-track: #4d3a0f;
+    --critical: #d03b3b;  --critical-track: #4a1f1f;
+    --good: #0ca30c;
+    --pace: #c3c2b7;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface-1: #1a1a19; --text-primary: #f0efec; --text-secondary: #c3c2b7;
+  --text-muted: #898781; --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+  --accent: #3987e5; --accent-track: #104281; --warning: #fab219; --warning-track: #4d3a0f;
+  --critical: #d03b3b; --critical-track: #4a1f1f; --good: #0ca30c; --pace: #c3c2b7;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body.viz-root {
+  background: var(--page); color: var(--text-primary);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main { max-width: 1040px; margin: 0 auto; padding: 24px 20px 64px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0 0 4px; }
+h2 { font-size: 18px; font-weight: 600; margin: 0; }
+h3 { font-size: 14px; font-weight: 600; margin: 18px 0 6px; color: var(--text-secondary); }
+p { margin: 4px 0; }
+a { color: var(--accent); }
+.sub { color: var(--text-secondary); margin-bottom: 4px; }
+.meta { color: var(--text-muted); font-size: 13px; }
+.card {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px 18px; margin-top: 16px;
+}
+
+/* banner */
+.banner { display: none; margin-top: 16px; padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface-1); }
+.banner.show { display: flex; gap: 10px; align-items: baseline; }
+
+/* KPI row */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.tile .label { color: var(--text-secondary); font-size: 13px; }
+.tile .value { font-size: 30px; font-weight: 600; line-height: 1.2; margin-top: 2px; }
+.tile .note { color: var(--text-muted); font-size: 13px; }
+
+/* meter list */
+.mrow { display: grid; grid-template-columns: 16rem 1fr 8.5rem; column-gap: 16px; align-items: center;
+  padding: 9px 0; border-top: 1px solid var(--grid); }
+.mrow:first-child { border-top: none; }
+.mrow .name { overflow-wrap: anywhere; }
+.mrow .name a { color: var(--text-primary); text-decoration: none; font-weight: 600; }
+.mrow .name a:hover { text-decoration: underline; }
+.mrow .status { font-size: 13px; color: var(--text-secondary); display: block; margin-top: 1px; }
+.figure { text-align: right; font-variant-numeric: tabular-nums; font-size: 14px; }
+.figure .pct { font-weight: 600; }
+.figure .of { color: var(--text-muted); font-size: 12px; display: block; }
+.barcell { position: relative; cursor: default; outline: none; }
+.barcell:focus-visible .track { box-shadow: 0 0 0 2px var(--surface-1), 0 0 0 4px var(--accent); }
+.track { position: relative; height: 8px; border-radius: 4px; background: var(--accent-track); }
+.fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--accent); }
+.lvl-warning .track { background: var(--warning-track); } .lvl-warning .fill { background: var(--warning); }
+.lvl-critical .track { background: var(--critical-track); } .lvl-critical .fill { background: var(--critical); }
+.pace { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--pace); border-radius: 1px; }
+.nobar { color: var(--text-muted); font-size: 13px; }
+@media (max-width: 640px) {
+  .mrow { grid-template-columns: 1fr 7.5rem; row-gap: 8px; }
+  .mrow .barcell { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* status icon + label: color never alone */
+.icon { display: inline-flex; width: 16px; height: 16px; border-radius: 50%; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; line-height: 1; vertical-align: -2px; margin-right: 6px; color: #fff; }
+.icon.good { background: var(--good); }
+.icon.warning { background: var(--warning); color: #0b0b0b; }
+.icon.critical { background: var(--critical); }
+.icon.none { background: var(--baseline); color: var(--text-primary); }
+
+/* legend for the meter */
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--text-secondary); font-size: 13px; margin: 2px 0 10px; }
+.legend .sw { display: inline-block; width: 18px; height: 8px; border-radius: 4px; vertical-align: 0; margin-right: 6px; }
+.legend .tick { display: inline-block; width: 2px; height: 14px; background: var(--pace); vertical-align: -3px; margin-right: 6px; }
+
+/* project sections */
+.proj-head { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+.facts { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+.facts span + span::before { content: " · "; color: var(--text-muted); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 13px; border-bottom: 1px solid var(--baseline); padding: 4px 8px 4px 0; }
+td { border-bottom: 1px solid var(--grid); padding: 5px 8px 5px 0; vertical-align: top; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.tables { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+@media (max-width: 760px) { .tables { grid-template-columns: 1fr; } }
+.flag { color: var(--text-secondary); font-size: 13px; white-space: nowrap; }
+.muted { color: var(--text-muted); }
+
+/* tooltip */
+.tip { position: fixed; z-index: 10; pointer-events: none; display: none; max-width: 300px;
+  background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12); padding: 8px 10px; font-size: 13px; }
+.tip b { font-weight: 600; }
+.tip .row { display: flex; justify-content: space-between; gap: 16px; }
+.tip .row span:last-child { font-variant-numeric: tabular-nums; }
+
+footer { margin-top: 28px; color: var(--text-secondary); font-size: 13px; }
+footer p { margin: 6px 0; }
+</style>
+</head>
+<body class="viz-root">
+<main>
+  <h1>SU watch</h1>
+  <p class="sub">Nectar Research Cloud Service Unit budgets, use and burn, for every project I belong to.
+    Updated daily. <span class="meta" id="generated"></span></p>
+
+  <div class="banner" id="stale" role="status"><span class="icon warning" aria-hidden="true">!</span><span id="stale-text"></span></div>
+
+  <section class="kpis" id="kpis" aria-label="Summary"></section>
+
+  <section class="card" aria-labelledby="overview-h">
+    <h2 id="overview-h">Budget used</h2>
+    <div class="legend" aria-hidden="true">
+      <span><span class="sw" style="background:var(--accent)"></span>on track</span>
+      <span><span class="sw" style="background:var(--warning)"></span>runs out early, or over 80%</span>
+      <span><span class="sw" style="background:var(--critical)"></span>over budget or ended</span>
+      <span><span class="tick"></span>share of the allocation period gone</span>
+    </div>
+    <div class="meters" id="meters" role="list"></div>
+  </section>
+
+  <div id="projects"></div>
+
+  <footer>
+    <p><b>Stopped is not off.</b> Shut-off and suspended VMs are charged at the full rate. Only shelving
+      or deleting a VM stops the charge
+      (<a href="https://support.ehelp.edu.au/support/solutions/articles/6000257023">Nectar: Service Units</a>).</p>
+    <p><b>Budget</b>: the current approved allocation's SU budget. <b>Used</b>: SU charged since that allocation
+      started (Nectar Rating service). <b>Burn</b>: the flavour rate of every VM that exists now. <b>Runs out</b>:
+      when the budget is gone at that burn.</p>
+    <p>How it's made: <a href="https://github.com/mdsumner/su-watch">github.com/mdsumner/su-watch</a></p>
+  </footer>
+</main>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const nf = new Intl.NumberFormat("en-AU");
+const n0 = x => x == null ? "–" : nf.format(Math.round(x));
+const compact = x => x == null ? "–" : new Intl.NumberFormat("en-AU", {notation: "compact", maximumFractionDigits: 1}).format(x);
+const day = s => { if (!s) return "–"; const d = new Date(s.length <= 10 ? s + "T00:00:00Z" : s);
+  return d.toLocaleDateString("en-AU", {day: "numeric", month: "short", year: "numeric", timeZone: "UTC"}); };
+const isDate = s => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
+const STOPPED = new Set(["SHUTOFF", "SUSPENDED", "PAUSED"]);
+const ICON = {good: "✓", warning: "!", critical: "✕", none: "–"};
+
+function status(p) {
+  if (p.error) return {level: "none", label: "No access from this login"};
+  const a = p.allocation;
+  if (!a) return {level: "none", label: "No allocation found"};
+  const over = a.budget && p.used >= a.budget;
+  if (a.ended && p.expired) return {level: "critical", label: `Allocation ended ${day(a.end)}; quota is zero`};
+  if (a.ended) return {level: "warning", label: `Allocation ended ${day(a.end)}; quota still open`};
+  if (p.expired) return {level: "critical", label: over ? "Over budget; quota is zero" : "Quota is zero"};
+  if (over) return {level: "critical", label: "Over budget"};
+  if (isDate(p.runs_out) && p.runs_out < a.end) return {level: "warning", label: `Runs out ${day(p.runs_out)}, before the allocation ends`};
+  if (p.pct_used >= 80) return {level: "warning", label: "Over 80% used"};
+  return {level: "good", label: "On track"};
+}
+const RANK = {critical: 0, warning: 1, good: 2, none: 3};
+const frac = p => (p.allocation && p.allocation.budget) ? p.used / p.allocation.budget : null;
+function elapsed(a) {
+  const s = Date.parse(a.start + "T00:00:00Z"), e = Date.parse(a.end + "T00:00:00Z");
+  return Math.max(0, Math.min(1, (Date.now() - s) / (e - s)));
+}
+const nameHtml = s => esc(s).replace(/_/g, "_<wbr>");
+const slug = s => "p-" + s.replace(/[^A-Za-z0-9]+/g, "-");
+// a VM whose flavour has no published rate: estimate it from what Rating charged it
+function rate(p, s) {
+  if (s.su_per_hour != null) return {v: s.su_per_hour, est: false};
+  const u = (p.used_by || []).find(u => u.name === s.name && u.hours > 0);
+  return u ? {v: u.su / u.hours, est: true} : {v: null, est: false};
+}
+const stoppedSU = p => (p.servers || []).filter(s => STOPPED.has(s.status))
+  .reduce((t, s) => t + (rate(p, s).v || 0) * 8760, 0);
+
+function badge(st) {
+  return `<span class="icon ${st.level}" aria-hidden="true">${ICON[st.level]}</span>${esc(st.label)}`;
+}
+
+function render(d) {
+  const ps = d.projects.map(p => ({...p, st: status(p)}))
+    .sort((x, y) => RANK[x.st.level] - RANK[y.st.level] || (frac(y) ?? -1) - (frac(x) ?? -1) || x.project.localeCompare(y.project));
+
+  // generated + stale
+  $("#generated").textContent = `Last update ${new Date(d.generated.replace("Z", ":00Z")).toLocaleString("en-AU", {dateStyle: "medium", timeStyle: "short"})}.`;
+  const ageH = (Date.now() - Date.parse(d.generated.replace("Z", ":00Z"))) / 3.6e6;
+  if (ageH > 36) {
+    $("#stale").classList.add("show");
+    $("#stale-text").textContent = `This data is ${Math.round(ageH / 24)} days old: the daily update may have stopped.`;
+  }
+
+  // KPIs
+  const live = ps.filter(p => !p.error);
+  const burnYr = live.reduce((t, p) => t + (p.su_per_year || 0), 0);
+  const stopped = live.flatMap(p => (p.servers || []).filter(s => STOPPED.has(s.status)));
+  const stoppedYr = live.reduce((t, p) => t + stoppedSU(p), 0);
+  const attention = ps.filter(p => p.st.level === "critical" || p.st.level === "warning").length;
+  $("#kpis").innerHTML = `
+    <div class="tile"><div class="label">Burn across all projects</div><div class="value">${compact(burnYr)}</div><div class="note">SU a year at today's rate</div></div>
+    <div class="tile"><div class="label">Going on stopped VMs</div><div class="value">${compact(stoppedYr)}</div><div class="note">SU a year, ${stopped.length} stopped VM${stopped.length === 1 ? "" : "s"}</div></div>
+    <div class="tile"><div class="label">Projects needing attention</div><div class="value">${attention}</div><div class="note">of ${ps.length}</div></div>`;
+
+  // meter list
+  $("#meters").innerHTML = ps.map((p, i) => {
+    const a = p.allocation, f = frac(p);
+    let bar, fig;
+    if (f != null) {
+      const w = Math.min(f, 1) * 100, pace = elapsed(a) * 100;
+      bar = `<div class="barcell lvl-${p.st.level}" tabindex="0" data-i="${i}" aria-label="${esc(p.project)}: ${Math.round(f * 100)}% of budget used">
+               <div class="track"><div class="fill" style="width:${w}%"></div><div class="pace" style="left:${pace}%"></div></div></div>`;
+      fig = `<span class="pct">${Math.round(f * 100)}%</span><span class="of">${n0(p.used)} of ${n0(a.budget)}</span>`;
+    } else {
+      bar = `<div class="barcell nobar" data-i="${i}">${p.error ? "–" : p.used != null ? `no budget set; ${n0(p.used)} SU since ${day(a && a.start)}` : "no budget"}</div>`;
+      fig = `<span class="of">${p.su_per_year ? compact(p.su_per_year) + " SU/yr" : ""}</span>`;
+    }
+    return `<div class="mrow" role="listitem"><div class="name"><a href="#${slug(p.project)}">${nameHtml(p.project)}</a><span class="status">${badge(p.st)}</span></div>${bar}<div class="figure">${fig}</div></div>`;
+  }).join("");
+
+  // projects
+  $("#projects").innerHTML = ps.map(p => {
+    const a = p.allocation;
+    if (p.error) return `<section class="card" id="${slug(p.project)}"><div class="proj-head"><h2>${esc(p.project)}</h2><span>${badge(p.st)}</span></div><p class="facts">${esc(p.error)}</p></section>`;
+    const facts = [];
+    if (a) {
+      facts.push(`Allocation ${day(a.start)} – ${day(a.end)}`);
+      if (a.bundle) facts.push(`${esc(a.bundle)} bundle`);
+      if (a.home) facts.push(esc(a.home));
+      if (a.request_status && a.request_status !== "Approved") facts.push(`latest request: ${esc(a.request_status)} (${day(a.request_date)})`);
+    }
+    facts.push(`quota ${p.quota_cores ?? "?"} cores`);
+    const burn = [`Burn now <b>${p.su_per_hour.toFixed(2)}</b> SU/hour (${compact(p.su_per_year)} a year)`,
+                  `charged over the last 7 days ${p.charged_su_per_hour_7d.toFixed(2)} SU/hour`];
+    if (isDate(p.runs_out)) burn.push(`runs out ${day(p.runs_out)}`);
+    const unrated = (p.unrated_flavours || []).length
+      ? `<p class="facts muted">${p.unrated_flavours.map(esc).join(", ")} ${p.unrated_flavours.length === 1 ? "has" : "have"} no published rate; the burn uses the 7-day charge instead.</p>` : "";
+    const total = (p.used_by || []).reduce((t, u) => t + u.su, 0) || 1;
+    const usedBy = (p.used_by || []).length ? `
+      <div><h3>What used it since ${day(a && a.start)}</h3>
+      <table><thead><tr><th>VM</th><th class="num">SU</th><th class="num">Share</th><th class="num">Hours</th></tr></thead><tbody>
+      ${p.used_by.map(u => `<tr><td>${/deleted/.test(u.name) ? `<span class="muted">${esc(u.name)}</span>` : esc(u.name)}</td><td class="num">${n0(u.su)}</td><td class="num">${Math.round(100 * u.su / total)}%</td><td class="num">${n0(u.hours)}</td></tr>`).join("")}
+      </tbody></table></div>` : "";
+    const vms = (p.servers || []).length ? `
+      <div><h3>VMs now</h3>
+      <table><thead><tr><th>VM</th><th>State</th><th>Flavour</th><th class="num">SU a year</th></tr></thead><tbody>
+      ${p.servers.map(s => `<tr><td>${esc(s.name)}</td><td>${STOPPED.has(s.status) ? `<span class="flag"><span class="icon warning" aria-hidden="true">!</span>${esc(s.status.toLowerCase())}, still charged</span>` : esc(s.status.toLowerCase())}</td><td>${esc(s.flavor)}</td><td class="num">${(r => r.v == null ? '<span class="muted">no rate</span>' : (r.est ? '<span class="muted" title="no published rate; estimated from what it was charged">≈ </span>' : "") + n0(r.v * 8760))(rate(p, s))}</td></tr>`).join("")}
+      </tbody></table></div>` : `<div><h3>VMs now</h3><p class="muted">none</p></div>`;
+    return `<section class="card" id="${slug(p.project)}">
+      <div class="proj-head"><h2>${esc(p.project)}</h2><span>${badge(p.st)}</span></div>
+      <p class="facts">${facts.map(f => `<span>${f}</span>`).join("")}</p>
+      <p class="facts">${burn.map(f => `<span>${f}</span>`).join("")}</p>${unrated}
+      <div class="tables">${usedBy}${vms}</div></section>`;
+  }).join("");
+
+  // tooltip for meters (hover and keyboard focus)
+  const tip = $("#tip");
+  const show = (el, x, y) => {
+    const p = ps[+el.dataset.i], a = p.allocation, f = frac(p);
+    const rows = [["Used", `${n0(p.used)} SU`], ["Budget", `${n0(a.budget)} SU`], ["Share used", `${Math.round(f * 100)}%`],
+                  ["Period gone", `${Math.round(elapsed(a) * 100)}%`], ["Burn", `${compact(p.su_per_year)} SU/yr`],
+                  ["Allocation ends", day(a.end)]];
+    if (isDate(p.runs_out)) rows.push(["Runs out", day(p.runs_out)]);
+    tip.innerHTML = `<b>${esc(p.project)}</b>` + rows.map(r => `<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join("");
+    tip.style.display = "block";
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x + 14, innerWidth - w - 8) + "px";
+    tip.style.top = Math.max(8, y - h - 12) + "px";
+  };
+  const hide = () => { tip.style.display = "none"; };
+  document.querySelectorAll(".barcell[tabindex]").forEach(el => {
+    el.addEventListener("mousemove", e => show(el, e.clientX, e.clientY));
+    el.addEventListener("mouseleave", hide);
+    el.addEventListener("focus", () => { const r = el.getBoundingClientRect(); show(el, r.left + r.width / 2, r.top); });
+    el.addEventListener("blur", hide);
+  });
+}
+
+fetch("data/su-watch.json", {cache: "no-cache"})
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(render)
+  .catch(e => { $("#meters").textContent = "Couldn't load data/su-watch.json (" + e.message + ")."; });
+</script>
+</body>
+</html>

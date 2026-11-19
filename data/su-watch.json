@@ -1,0 +1,435 @@
+{
+ "generated": "2026-11-19T21:20Z",
+ "projects": [
+  {
+   "project": "AAD_Science",
+   "allocation": {
+    "start": "2026-05-04",
+    "end": "2027-05-04",
+    "ended": false,
+    "bundle": null,
+    "home": "National",
+    "budget": 30232,
+    "request_status": "Approved",
+    "request_date": "2026-05-04"
+   },
+   "servers": [
+    {
+     "name": "aad",
+     "status": "ACTIVE",
+     "flavor": "r3.xxlarge",
+     "su_per_hour": 1.668
+    },
+    {
+     "name": "omics",
+     "status": "ACTIVE",
+     "flavor": "r3.xxlarge",
+     "su_per_hour": 1.668
+    }
+   ],
+   "idle": [],
+   "unrated_flavours": [],
+   "list_su_per_hour": 3.336,
+   "charged_su_per_hour_7d": 3.237,
+   "su_per_hour": 3.336,
+   "su_per_year": 29223,
+   "quota_cores": 64,
+   "expired": false,
+   "used": 15866,
+   "used_by": [
+    {
+     "name": "aad",
+     "su": 7940,
+     "hours": 4760
+    },
+    {
+     "name": "omics",
+     "su": 7926,
+     "hours": 4752
+    }
+   ],
+   "pct_used": 52.5,
+   "runs_out": "2027-05-18"
+  },
+  {
+   "project": "ACE-retention",
+   "error": "no access (HTTP 401)"
+  },
+  {
+   "project": "ACE_eco_stats",
+   "allocation": {
+    "start": "2026-07-20",
+    "end": "2027-07-20",
+    "ended": false,
+    "bundle": "Extreme",
+    "home": "TPAC",
+    "budget": 16000,
+    "request_status": "Update requested",
+    "request_date": "2026-11-19"
+   },
+   "servers": [
+    {
+     "name": "ecostats",
+     "status": "ACTIVE",
+     "flavor": "r3.xxlarge",
+     "su_per_hour": 1.668
+    },
+    {
+     "name": "aad",
+     "status": "SUSPENDED",
+     "flavor": "r3.small",
+     "su_per_hour": 0.104
+    },
+    {
+     "name": "claude-test-4",
+     "status": "ACTIVE",
+     "flavor": "m3.small",
+     "su_per_hour": 0.057
+    },
+    {
+     "name": "claude-test-3",
+     "status": "ACTIVE",
+     "flavor": "m3.small",
+     "su_per_hour": 0.057
+    },
+    {
+     "name": "aadsci-admin",
+     "status": "SHUTOFF",
+     "flavor": "c3.xsmall",
+     "su_per_hour": 0.043
+    },
+    {
+     "name": "relay",
+     "status": "ACTIVE",
+     "flavor": "t3.small",
+     "su_per_hour": 0.029
+    }
+   ],
+   "idle": [
+    "aad",
+    "aadsci-admin"
+   ],
+   "unrated_flavours": [],
+   "list_su_per_hour": 1.958,
+   "charged_su_per_hour_7d": 5.512,
+   "su_per_hour": 1.958,
+   "su_per_year": 17152,
+   "quota_cores": 0,
+   "expired": true,
+   "used": 16149,
+   "used_by": [
+    {
+     "name": "jhub-server (deleted)",
+     "su": 8106,
+     "hours": 2921
+    },
+    {
+     "name": "ecostats",
+     "su": 4866,
+     "hours": 2917
+    },
+    {
+     "name": "estinel (deleted)",
+     "su": 2667,
+     "hours": 2921
+    },
+    {
+     "name": "aad",
+     "su": 303,
+     "hours": 2916
+    },
+    {
+     "name": "aadsci-admin",
+     "su": 126,
+     "hours": 2920
+    },
+    {
+     "name": "claude-test-3",
+     "su": 24,
+     "hours": 426
+    },
+    {
+     "name": "claude-test-4",
+     "su": 24,
+     "hours": 426
+    },
+    {
+     "name": "relay",
+     "su": 12,
+     "hours": 397
+    },
+    {
+     "name": "deleted VM",
+     "su": 9,
+     "hours": 83
+    },
+    {
+     "name": "deleted VM",
+     "su": 9,
+     "hours": 76
+    },
+    {
+     "name": "deleted VM",
+     "su": 4,
+     "hours": 31
+    }
+   ],
+   "pct_used": 100.9,
+   "runs_out": "over budget"
+  },
+  {
+   "project": "Antarctic_Biodiversity_Modelling",
+   "allocation": {
+    "start": "2026-03-31",
+    "end": "2027-03-31",
+    "ended": false,
+    "bundle": null,
+    "home": "National",
+    "budget": 25000,
+    "request_status": "Approved",
+    "request_date": "2026-03-31"
+   },
+   "servers": [
+    {
+     "name": "AntPro2",
+     "status": "ACTIVE",
+     "flavor": "tas.c16m96",
+     "su_per_hour": 1.212
+    },
+    {
+     "name": "gpud",
+     "status": "SHUTOFF",
+     "flavor": "c3.medium",
+     "su_per_hour": 0.173
+    }
+   ],
+   "idle": [
+    "gpud"
+   ],
+   "unrated_flavours": [],
+   "list_su_per_hour": 1.385,
+   "charged_su_per_hour_7d": 1.352,
+   "su_per_hour": 1.385,
+   "su_per_year": 12133,
+   "quota_cores": 58,
+   "expired": false,
+   "used": 7287,
+   "used_by": [
+    {
+     "name": "AntPro2",
+     "su": 6761,
+     "hours": 5578
+    },
+    {
+     "name": "gpud",
+     "su": 527,
+     "hours": 3046
+    }
+   ],
+   "pct_used": 29.1,
+   "runs_out": "2028-05-05"
+  },
+  {
+   "project": "CLIOTOP_TT06_AMPCC",
+   "allocation": {
+    "start": "2025-11-03",
+    "end": "2026-11-03",
+    "ended": true,
+    "bundle": "Powerful",
+    "home": "TPAC",
+    "budget": 8000,
+    "request_status": "Approved",
+    "request_date": "2025-11-02"
+   },
+   "servers": [
+    {
+     "name": "cliotop3",
+     "status": "ACTIVE",
+     "flavor": "m3.xxlarge",
+     "su_per_hour": 0.913
+    }
+   ],
+   "idle": [],
+   "unrated_flavours": [],
+   "list_su_per_hour": 0.913,
+   "charged_su_per_hour_7d": 0.891,
+   "su_per_hour": 0.913,
+   "su_per_year": 7998,
+   "quota_cores": 0,
+   "expired": true,
+   "used": 8334,
+   "used_by": [
+    {
+     "name": "cliotop3",
+     "su": 8334,
+     "hours": 9128
+    }
+   ],
+   "runs_out": "allocation ended 2026-11-03"
+  },
+  {
+   "project": "pt-3210",
+   "allocation": null,
+   "servers": [],
+   "idle": [],
+   "unrated_flavours": [],
+   "list_su_per_hour": 0,
+   "charged_su_per_hour_7d": 0.0,
+   "su_per_hour": 0,
+   "su_per_year": 0,
+   "quota_cores": 0,
+   "expired": true
+  },
+  {
+   "project": "raadsync",
+   "allocation": {
+    "start": "2026-03-03",
+    "end": "2027-03-03",
+    "ended": false,
+    "bundle": "Extreme",
+    "home": "National",
+    "budget": 16000,
+    "request_status": "Approved",
+    "request_date": "2026-03-03"
+   },
+   "servers": [
+    {
+     "name": "raadsync3",
+     "status": "ACTIVE",
+     "flavor": "m3.xlarge",
+     "su_per_hour": 0.457
+    },
+    {
+     "name": "ghrunner",
+     "status": "ACTIVE",
+     "flavor": "m3.large",
+     "su_per_hour": 0.228
+    },
+    {
+     "name": "pawsey-test-01",
+     "status": "ACTIVE",
+     "flavor": "t3.xsmall",
+     "su_per_hour": 0.014
+    },
+    {
+     "name": "raadmount",
+     "status": "ACTIVE",
+     "flavor": "m2.large",
+     "su_per_hour": null
+    },
+    {
+     "name": "raadsync2",
+     "status": "SHUTOFF",
+     "flavor": "m1.xlarge",
+     "su_per_hour": null
+    }
+   ],
+   "idle": [
+    "raadsync2"
+   ],
+   "unrated_flavours": [
+    "m1.xlarge",
+    "m2.large"
+   ],
+   "list_su_per_hour": 0.699,
+   "charged_su_per_hour_7d": 1.657,
+   "su_per_hour": 1.657,
+   "su_per_year": 14517,
+   "quota_cores": 256,
+   "expired": false,
+   "used": 10821,
+   "used_by": [
+    {
+     "name": "raadmount",
+     "su": 3422,
+     "hours": 6233
+    },
+    {
+     "name": "raadsync2",
+     "su": 3129,
+     "hours": 6246
+    },
+    {
+     "name": "raadsync3",
+     "su": 2853,
+     "hours": 6242
+    },
+    {
+     "name": "ghrunner",
+     "su": 1414,
+     "hours": 6201
+    },
+    {
+     "name": "pawsey-test-01",
+     "su": 3,
+     "hours": 235
+    }
+   ],
+   "pct_used": 67.6,
+   "runs_out": "2027-03-30"
+  },
+  {
+   "project": "UTas_IMAS_Predators",
+   "allocation": {
+    "start": "2019-11-19",
+    "end": "2020-11-19",
+    "ended": true,
+    "bundle": null,
+    "home": "TPAC",
+    "budget": null,
+    "request_status": "Approved",
+    "request_date": "2019-11-19"
+   },
+   "servers": [
+    {
+     "name": "marinepredlab",
+     "status": "ACTIVE",
+     "flavor": "m3.xxlarge",
+     "su_per_hour": 0.913
+    },
+    {
+     "name": "raatd2",
+     "status": "ACTIVE",
+     "flavor": "m3.xxlarge",
+     "su_per_hour": 0.913
+    }
+   ],
+   "idle": [],
+   "unrated_flavours": [],
+   "list_su_per_hour": 1.826,
+   "charged_su_per_hour_7d": 1.783,
+   "su_per_hour": 1.826,
+   "su_per_year": 15996,
+   "quota_cores": 64,
+   "expired": false,
+   "used": 77374,
+   "used_by": [
+    {
+     "name": "raatd2",
+     "su": 38800,
+     "hours": 42497
+    },
+    {
+     "name": "deleted VM",
+     "su": 26730,
+     "hours": 29277
+    },
+    {
+     "name": "marinepredlab",
+     "su": 11764,
+     "hours": 12885
+    },
+    {
+     "name": "deleted VM",
+     "su": 80,
+     "hours": 352
+    }
+   ],
+   "runs_out": "allocation ended 2020-11-19"
+  },
+  {
+   "project": "UTas_RTrack01",
+   "error": "no access (HTTP 401)"
+  }
+ ]
+}
