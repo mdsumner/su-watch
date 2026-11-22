@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-21T20:06Z",
+ "generated": "2026-11-22T20:05Z",
  "projects": [
   {
    "project": "AAD_Science",
@@ -30,25 +30,25 @@
    "idle": [],
    "unrated_flavours": [],
    "list_su_per_hour": 3.336,
-   "charged_su_per_hour_7d": 3.217,
+   "charged_su_per_hour_7d": 3.276,
    "su_per_hour": 3.336,
    "su_per_year": 29223,
    "quota_cores": 64,
    "expired": false,
-   "used": 16019,
+   "used": 16103,
    "used_by": [
     {
      "name": "aad",
-     "su": 8016,
-     "hours": 4806
+     "su": 8058,
+     "hours": 4831
     },
     {
      "name": "omics",
-     "su": 8003,
-     "hours": 4798
+     "su": 8045,
+     "hours": 4823
     }
    ],
-   "pct_used": 53.0,
+   "pct_used": 53.3,
    "runs_out": "2027-05-18"
   },
   {
@@ -108,12 +108,12 @@
    "idle": [],
    "unrated_flavours": [],
    "list_su_per_hour": 1.697,
-   "charged_su_per_hour_7d": 4.521,
+   "charged_su_per_hour_7d": 3.981,
    "su_per_hour": 1.697,
    "su_per_year": 14866,
    "quota_cores": 0,
    "expired": true,
-   "used": 16248,
+   "used": 16287,
    "used_by": [
     {
      "name": "jhub-server (deleted)",
@@ -122,8 +122,8 @@
     },
     {
      "name": "ecostats",
-     "su": 4946,
-     "hours": 2965
+     "su": 4984,
+     "hours": 2988
     },
     {
      "name": "estinel (deleted)",
@@ -152,8 +152,8 @@
     },
     {
      "name": "relay",
-     "su": 13,
-     "hours": 445
+     "su": 14,
+     "hours": 468
     },
     {
      "name": "deleted VM",
@@ -171,7 +171,7 @@
      "hours": 31
     }
    ],
-   "pct_used": 101.5,
+   "pct_used": 101.8,
    "runs_out": "over budget"
   },
   {
@@ -210,20 +210,20 @@
    "su_per_year": 12133,
    "quota_cores": 58,
    "expired": false,
-   "used": 7354,
+   "used": 7386,
    "used_by": [
     {
      "name": "AntPro2",
-     "su": 6819,
-     "hours": 5626
+     "su": 6847,
+     "hours": 5649
     },
     {
      "name": "gpud",
-     "su": 535,
-     "hours": 3094
+     "su": 539,
+     "hours": 3117
     }
    ],
-   "pct_used": 29.4,
+   "pct_used": 29.5,
    "runs_out": "2028-05-05"
   },
   {
@@ -254,12 +254,12 @@
    "su_per_year": 7998,
    "quota_cores": 0,
    "expired": true,
-   "used": 8377,
+   "used": 8398,
    "used_by": [
     {
      "name": "cliotop3",
-     "su": 8377,
-     "hours": 9175
+     "su": 8398,
+     "hours": 9198
     }
    ],
    "runs_out": "allocation ended 2026-11-03"
@@ -329,27 +329,27 @@
     "m2.large"
    ],
    "list_su_per_hour": 0.699,
-   "charged_su_per_hour_7d": 1.602,
-   "su_per_hour": 1.602,
-   "su_per_year": 14037,
+   "charged_su_per_hour_7d": 1.571,
+   "su_per_hour": 1.571,
+   "su_per_year": 13764,
    "quota_cores": 256,
    "expired": false,
-   "used": 10894,
+   "used": 10929,
    "used_by": [
     {
      "name": "raadmount",
-     "su": 3448,
-     "hours": 6281
+     "su": 3461,
+     "hours": 6304
     },
     {
      "name": "raadsync2",
-     "su": 3153,
-     "hours": 6294
+     "su": 3165,
+     "hours": 6317
     },
     {
      "name": "raadsync3",
-     "su": 2875,
-     "hours": 6290
+     "su": 2885,
+     "hours": 6313
     },
     {
      "name": "ghrunner",
@@ -359,11 +359,11 @@
     {
      "name": "pawsey-test-01",
      "su": 4,
-     "hours": 283
+     "hours": 306
     }
    ],
-   "pct_used": 68.1,
-   "runs_out": "2027-04-03"
+   "pct_used": 68.3,
+   "runs_out": "2027-04-06"
   },
   {
    "project": "UTas_IMAS_Predators",
@@ -399,12 +399,12 @@
    "su_per_year": 15996,
    "quota_cores": 64,
    "expired": false,
-   "used": 77462,
+   "used": 77504,
    "used_by": [
     {
      "name": "raatd2",
-     "su": 38844,
-     "hours": 42545
+     "su": 38865,
+     "hours": 42568
     },
     {
      "name": "deleted VM",
@@ -413,8 +413,8 @@
     },
     {
      "name": "marinepredlab",
-     "su": 11808,
-     "hours": 12933
+     "su": 11829,
+     "hours": 12956
     },
     {
      "name": "deleted VM",
